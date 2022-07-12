@@ -1,0 +1,61 @@
+
+/* 1 */
+select *
+from salgrade;
+
+/* 2 */
+select * 
+FROM emp;
+
+/* 3 */
+SELECT * 
+FROM EMP WHERE sal BETWEEN 1000 AND 2000;
+
+/* 4 */
+select *
+FROM dept order by dname ; --deptno DESC лишняя
+
+/* 5 */
+select DISTINCT JOB --не хватает уникальности
+from emp;
+
+/* 6 */
+select *
+from emp
+where deptno in (10,20)  --лучше через IN
+order by ename desc;
+
+/* 7 */
+select *
+from emp
+where ename like '%TH%' or ename like '%LL%';
+
+/* 8 */
+select ename,job,deptno
+from emp
+where deptno = 20 and job = 'CLERK';
+
+/* 9 */
+select *
+from emp
+where MGR is not NULL;
+
+/* 10 */
+SELECT empno, ename, job, 12*sal + nvl(comm,0) "Годовой доход" 
+FROM EMP;
+
+/* 11 */
+select ename,deptno,hiredate
+from emp
+where hiredate like '%.81';
+/* 12 */
+SELECT empno, ename, job, 12*sal + nvl(comm,0) "Годовой доход", sal
+FROM EMP
+where job = 'SALESMAN' and sal >comm
+order by sal DESC, ename ; --еще один уровень сортировки
+/* 13 */
+select ename || ' занимает должность ' || job || ' в отделе ' || deptno || ' принят '|| hiredate "Who, what and when"
+from emp;
+ 
+
+

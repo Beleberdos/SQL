@@ -1,0 +1,16 @@
+select 
+XMLSERIALIZE(content 
+xmlagg(XMLELEMENT("Department",
+    XMLATTRIBUTES(d.deptno,d.dname ),
+        xmlagg(XMLELEMENT("Employee",
+            XMLATTRIBUTES(e.empno "Emp_number",e.job "JOB"),
+            XMLELEMENT("ENAME",e.ename),
+            XMLELEMENT("SAL",e.sal),
+            XMLELEMENT("Salgrade",s.grade)) 
+            order by e.empno)) 
+            order by d.deptno) 
+            indent size=4)
+from dept d
+left join emp e on e.deptno=d.deptno
+left join salgrade s on e.sal>=s.losal and e.sal<=s.hisal
+group by d.deptno,d.dname;

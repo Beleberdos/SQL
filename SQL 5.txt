@@ -1,0 +1,61 @@
+-- 1
+
+SELECT E.empno, E.ename, E.mgr, M.ename
+
+FROM EMP E
+
+JOIN EMP M ON E.mgr = M.empno;
+
+-- 2
+
+SELECT E.empno, E.ename, E.mgr, M.ename
+
+FROM EMP E
+
+LEFT JOIN EMP M ON E.mgr = M.empno;
+
+--3
+
+SELECT E.job
+
+FROM EMP E
+
+WHERE EXTRACT(MONTH FROM E.hiredate) >= 6 AND EXTRACT(YEAR FROM E.hiredate) = 1980
+
+INTERSECT
+
+SELECT M.job
+
+FROM EMP M
+
+WHERE EXTRACT(MONTH FROM M.hiredate) >= 6 AND EXTRACT(YEAR FROM M.hiredate) = 1981;
+
+--4
+
+SELECT E.ename, E.hiredate, M.ename, M.hiredate
+
+FROM EMP E
+
+JOIN EMP M ON E.mgr = M.empno AND E.hiredate < M.hiredate;
+
+--5.1
+
+SELECT D.deptno, D.dname
+
+FROM DEPT D
+
+LEFT JOIN EMP E ON E.deptno = D.deptno
+
+WHERE E.deptno IS NULL;
+
+--5.2
+
+SELECT D.deptno
+
+FROM DEPT D
+
+MINUS
+
+SELECT E.deptno
+
+FROM EMP E

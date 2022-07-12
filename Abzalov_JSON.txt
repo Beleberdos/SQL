@@ -1,0 +1,20 @@
+-- 1
+SELECT
+JSON_ARRAYAGG(
+    JSON_OBJECT(
+        KEY 'dname' IS CONCAT(CONCAT(deptno, ' - '), dname), KEY 'location' IS loc)
+		) one
+FROM DEPT;
+-- 2
+SELECT JSON_ARRAYAGG(
+    JSON_ARRAY(
+        e.deptno,
+        JSON_OBJECT(KEY 'avg_sal' IS round(AVG(e.sal))),
+        JSON_OBJECT(KEY 'max_sal' IS MAX(e.sal)),
+        JSON_OBJECT(KEY 'min_sal' IS MIN(e.sal)),
+        JSON_ARRAYAGG( 
+            JSON_ARRAY(empno,ename,job,
+				JSON_OBJECT(KEY 'year_sal' IS (select sum(12*m.sal +nvl(em.comm, 0)) from EMP em where em.ename = e.ename) ),
+                mgr
+                NULL ON NULL)))) two 
+FROM EMP e GROUP BY deptno;

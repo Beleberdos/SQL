@@ -1,0 +1,21 @@
+--1
+select min(sal) as "MINIMUM" from emp;
+--2
+select max(sal) as "MAXIMUM",  min(sal) as "MINIMUM",ROUND(avg(sal),0) as "AVARAGE" from emp;
+--3
+select job,min(sal),max(sal) from emp group by job;
+--4
+select COUNT(job) as "MANAGER" from emp where job = 'MANAGER';
+--5
+select distinct(job), ROUND(avg(sal+nvl(COMM,0)),0) as "AVGSAL",ROUND(avg(sal*12+nvl(COMM,0)),0) as "AVGCOMP" from emp group by job;
+--6
+select (max(sal)-min(sal)) as "Разница" from emp;
+--7
+SELECT deptno, COUNT(*) as "Количество"
+FROM emp
+GROUP BY deptno
+HAVING COUNT(*) > 3;
+--8
+SELECT empno, COUNT(DISTINCT EMPNO)  from emp group by empno;
+--9
+ELECT MGR, MIN(SAL) AS "MIN SALARY" FROM EMP WHERE MGR IS NOT NULL GROUP BY MGR HAVING MIN(SAL) > 1000 ORDER BY MIN(SAL);

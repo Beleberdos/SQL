@@ -1,0 +1,77 @@
+﻿--1.
+select ename, job, sal
+from emp e
+where sal = (select max(sal) from emp ee where e.job = ee.job);
+
+--2.
+select job, ename, sal
+from emp 
+where (sal, job) in (select min(sal), job from emp group by job)
+order by sal;
+
+--3.
+select deptno, ename, hiredate
+from emp 
+where (deptno, hiredate) in (select deptno, max(hiredate) from emp group by deptno)
+order by sal;
+
+--4.
+select ename, sal, deptno
+from emp
+where sal > (select avg(sal) from emp)
+order by deptno;
+
+--5
+select deptno, dname
+from dept
+where deptno not in (select deptno from emp);
+
+--6.
+select deptno, sum(12*sal +nvl(comm, 0))"yr slr"
+from emp
+group by deptno
+having sum(12*sal +nvl(comm, 0)) = (select max(sum(12*sal +nvl(comm, 0))) from emp group by deptno);
+
+--7.
+select e.empno, e.ename, e.job, e.deptno
+from emp e
+where exists (select * from emp ee where e.empno = ee.mgr);
+
+--8.
+select deptno, avg(sal)
+from emp
+group by deptno
+having avg(sal) > (select avg(sal) from emp where deptno = 30) and count(empno) > 3;
+
+--9.
+select *
+from (select ename, sal from emp order by sal desc)
+where rownum < 4;
+
+--10.
+select (substr(to_char(hiredate, 'DD.MM.YYYY'),7,9)) "год", count(*) "кол-во"
+from emp 
+group by (substr(to_char(hiredate, 'DD.MM.YYYY'),7,9))
+having count(*) = (select max(count(*)) from emp group by (substr(to_char(hiredate, 'DD.MM.YYYY'),7,9))) ;
+
+--11.
+select e.ename, e.sal, e.deptno, (select round(avg(sal)) from emp where deptno = e.deptno)  "средняя"
+from emp e
+where e.sal > (select avg(sal) from emp ee where e.deptno = ee.deptno)
+order by deptno desc;
+
+--12.
+SELECT empno, ename, job, deptno
+FROM emp 
+WHERE empno NOT IN (SELECT mgr FROM emp WHERE mgr IS NOT NULL)
+order by deptno; 
+
+--13.
+select ename,hiredate,deptno,case when (select max(hiredate) from emp group by deptno having deptno=e.deptno)=e.hiredate then '*' else ' ' end "звёздочка"
+from emp e;
+
+--14.
+select ename, sal, job, deptno
+from emp
+where sal > (select min(sal) from emp where deptno = 20) and deptno = 30
+order by sal;

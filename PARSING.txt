@@ -1,0 +1,67 @@
+CREATE TABLE MESSAGE(id NUMBER, data XMLTYPE);
+INSERT INTO MESSAGE VALUES(1,xmltype('<Message>
+	<MessageInfo>
+		<MessageID>eb91c6d7-eb99-4b24-9bac-918260204c83</MessageID>
+		<MessageDate>2020-04-03T14:30:09Z</MessageDate>
+		<CorrelationID/>
+		<SourceSystem>
+			<InstanceID>DBO</InstanceID>
+		</SourceSystem>
+		<ResultInfo>
+			<Code>0000</Code>
+			<Message/>
+		</ResultInfo>
+		<TargetSystemList>
+			<TargetSystem>
+				<InstanceID>BIS</InstanceID>
+			</TargetSystem>
+		</TargetSystemList>
+		<UserLogin>P700</UserLogin>
+		<WorkstationAddress/>
+		<MessageType>ChangeCardLimits</MessageType>
+		<InteractionType>publish</InteractionType>
+		<MessageCode>0</MessageCode>
+		<InternalSystemNumber>eb91c6d7-eb99-4b24-9bac-918260204c83</InternalSystemNumber>
+		<Extension>
+			<name>DBOCorrelationID_MQRFH2.usr</name>
+			<value>eb91c6d7-eb99-4b24-9bac-918260204c83</value>
+		</Extension>
+	</MessageInfo>
+	<MessageBody>
+		<ChangeCardLimitsResponse>
+			<Card>
+				<PAN>5400123456789012</PAN>
+				<LimitCount>1</LimitCount>
+				<LimitList>
+					<Limit>
+						<Type>BVDTOT</Type>
+						<Status>A</Status>
+						<MaxTransactionCount>9999</MaxTransactionCount>
+						<StartDate>2020-04-03</StartDate>
+						<LimitAmount>
+							<Amount>25000.00</Amount>
+							<CurrencyCode>810</CurrencyCode>
+						</LimitAmount>
+					</Limit>
+				</LimitList>
+				<LogicalBank>
+					<BankName>005</BankName>
+				</LogicalBank>
+			</Card>
+		</ChangeCardLimitsResponse>
+	</MessageBody>
+</Message>'));
+
+SELECT rownum, x.* 
+from MESSAGE m,
+xmltable('/Message' PASSING m.data 
+COLUMNS SourceID VARCHAR(5) path 'MessageInfo/SourceSystem/InstanceID', 
+TargetID VARCHAR(30) path 'MessageInfo/TargetSystemList/TargetSystem/InstanceID',
+MessageType VARCHAR(30) path 'MessageInfo/MessageType',
+Extension_name VARCHAR(30) path 'MessageInfo/Extension/name',
+PAN Varchar(30) path 'MessageBody/ChangeCardLimitsResponse/Card/PAN',
+StartDate date path 'MessageBody/ChangeCardLimitsResponse/Card/LimitList/Limit/StartDate',
+LimitAmount Varchar(8) path 'MessageBody/ChangeCardLimitsResponse/Card/LimitList/Limit/LimitAmount',
+BankName Varchar(8) path 'MessageBody/ChangeCardLimitsResponse/Card/LogicalBank/BankName')x
+
+WHERE rownum = 1;
