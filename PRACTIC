@@ -1,0 +1,51 @@
+--1
+select ename,sal,
+row_number() over (order by sal desc) SAlNUMBER,
+row_number() over (order by sal) SAlNUMBER,
+rank() over (order by sal) salrank ,
+dense_rank() over (order by sal) denserank
+from emp;
+
+--2
+select ename,sal,
+round(100 * RATIO_TO_REPORT(SAL) over (),2) as salshare
+from emp;
+
+--3
+
+select ename,deptno,job,hiredate,sal, SUM(SAL) 
+over (partition by deptno order by hiredate desc) as SUM_SAL
+from emp;
+
+--4
+
+select ename,sal
+from emp
+order by sal desc
+fetch next 2 rows with ties; --СДЕЛАТЬ
+
+ --5
+ 
+select ename,deptno,sal,round(avg(SAL)
+over (partition by deptno order by sal rows 3 preceding),2) as NUM
+from emp;
+
+--6
+ 
+select ename,hiredate,deptno,sal, 
+case
+when (lag(sal,2,0) over (partition by deptno order by hiredate)) > sal  then '<'
+when (lag(sal,2,0) over (partition by deptno order by hiredate)) < sal  then '>'
+else '='
+end as CHECKSAL
+from emp;
+
+--7
+
+select deptno,listagg(job,',') within group 
+(order by ename) JOB
+from emp group by deptno; --СДЕЛАТЬ
+
+
+ 
+ 
